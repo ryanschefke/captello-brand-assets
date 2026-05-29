@@ -11,6 +11,7 @@ content.json schema:
   "owner": "Amanda",
   "status_line": "Returning / already-kicked-off client · 2 working sessions remaining · 5-slide deck.",
   "snapshot": "One paragraph account snapshot.",
+  "package": ["ULC x15", "QuickScan", "Salesforce integration"],   # purchased products/services
   "contacts": [["Caroline Salter","Primary contact — addressee on the pre-call email"], ...],
   "watchouts": ["Confirm Nadine's email ...", "..."],
   "tickets": [["#38416","Access issue","Waiting on customer"], ...],   # [] to omit section
@@ -94,6 +95,12 @@ def build(c,outpath):
     body(doc,c.get("snapshot",""))
     if c.get("contacts"):
         table(doc,["Contact","Role in this engagement"],c["contacts"],[3.1,5.4])
+
+    if c.get("package"):
+        h2(doc,"Purchased products & services")
+        body(doc,"Per the contract on file:",after=5)
+        for sku in c["package"]:
+            p=doc.add_paragraph(style='List Bullet'); p.paragraph_format.space_after=Pt(4); run(p,sku,10.5,"262626")
 
     h2(doc,f"Watch-outs for {c.get('owner','the onboarding specialist')}")
     for w in c.get("watchouts",[]):
