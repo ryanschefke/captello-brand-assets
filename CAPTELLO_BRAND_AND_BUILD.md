@@ -36,32 +36,23 @@ recreate, trace, or approximate the Captello logo — embed the provided files o
 
 ---
 
-## DECK blueprint (customer-facing .pptx) — 16:9
+## DECK blueprint (customer-facing .pptx) — 16:9 — 6 slides for EVERY client (hard cap 7)
 
-Presentation standards: dark cover → light content → dark close; one idea per slide;
-conclusion headlines (≤36 chars, one red keyword max); 5–25 words per slide; 3-second
-glance test. Customer-facing only — NEVER put confidential watch-outs, ticket numbers,
-contract gaps, or "send as <rep>" notes on a slide.
+Built by `scripts/build_deck.py` from a content JSON. Standards: dark cover -> light
+content -> dark close; one idea per slide; conclusion headlines (one red keyword max);
+3-second glance test. NEVER put confidential watch-outs, ticket numbers, contract gaps,
+or "send as <rep>" notes on a slide.
 
-**Slide count by call type:**
-- Returning / already-kicked-off → **5 slides, NO "Your package, at a glance" slide.**
-- First onboarding call → **6 slides, WITH the package slide** (purchased SKUs only),
-  inserted after the status slide.
+1. **Cover (dark):** white-text logo, red eyebrow, client name, subhead, prepared-by line, red arc.
+2. **Recap / Goals (REQUIRED):** returning -> "Where We Left Off" with a recap of the last
+   meeting; first call -> "Your Goals, Our Plan" with the client's goals. Left = bullets,
+   right = 3-stage progress tracker (NOW = Working sessions for returning, Kickoff for first).
+3. **Your Package, At a Glance (REQUIRED, ALL clients):** purchased SKUs as a card grid.
+4. **Two Sessions to Launch-Ready:** two session cards from the canonical workflow.
+5. **Your Prep Drives a Flawless Event:** prep checklist + dark "Test before launch" card.
+6. **Close (dark):** CTA, "captello.com" in red, white-text logo, red arc.
 
-1. **Cover (dark):** white-text logo top-left; red eyebrow "ONBOARDING · WORKING SESSION";
-   large white client name; one-line subhead; "Prepared by Captello Onboarding &
-   Enablement"; red quarter-circle arc bleeding off bottom-right.
-2. **Status / recap (light):** conclusion headline; 3 short bullets left; 3-stage vertical
-   progress indicator right (Kicked off → Working sessions [NOW, red pill] → Event-ready).
-3. **Agenda (light):** "Two Sessions to Launch-Ready" — two session cards, 3 items each,
-   from the canonical workflow (Verify Integrations → Build Template → Create Capture Form
-   → Invite Staff → Set Up Follow-Up → Establish Workflow → CRM/MAP Data Flow).
-4. **Preparation (light):** "Your Prep Drives a Flawless Event" — 3–4 item customer prep
-   checklist with red circular check icons + a dark "Test before launch" card on the right.
-   Lead with preparation.
-5. **Close (dark):** bold CTA headline; "Your onboarding specialist is one message away";
-   "captello.com" in red; white-text logo; red arc.
-- **(First call only) package slide:** purchased SKUs as a clean icon/label grid.
+Every deck is 6 slides. Do not exceed 7.
 
 ## BRIEF blueprint (internal .docx) — US Letter
 
@@ -71,6 +62,7 @@ detail.
 - Header: black-text logo + thin gray rule.
 - Eyebrow "CONFIDENTIAL · INTERNAL USE ONLY" (red); title + red rule; status line.
 - **Account snapshot** + contacts table (contact / role).
+- **Purchased products & services** — bulleted list from the contract (REQUIRED).
 - **Watch-outs for <owning specialist>** — bullets.
 - **Open Pylon tickets** (returning only) — table (ticket / issue / status), red status
   cells, flag the oldest ticket's age.
@@ -80,16 +72,26 @@ detail.
 
 ---
 
+## ONE-PAGER (rep-facing .html) — built by `scripts/build_onepager.py`
+
+Large fonts, brand colors only, Roboto, inlined SVG logo. Includes: a horizontal 3-stage
+progress tracker, a "Your Package" chip row (REQUIRED), recap/goals + challenges, the
+two-session plan, key contacts, numbered next steps, and colored open-ticket chips.
+Self-contained HTML (logo inlined) — uploads to Drive and renders in-browser; no render
+step needed at runtime.
+
 ## Build mechanics
 
 The run environment starts blank but can install packages. At the start of the build:
 
 ```
-pip3 install python-pptx python-docx --quiet      # or: npm install pptxgenjs
+pip3 install python-pptx python-docx --quiet
 ```
 
 Download the logo files from THIS Drive folder (Drive connector) into the working dir
-before embedding. Build with `scripts/build_deck.py` and `scripts/build_brief.py` (in this
-folder) — pass the client name, call type (returning|first), and the synthesized content.
-Then upload the finished .pptx/.docx back to Drive, set sharing to domain/team reader
-(never "anyone with the link"), and post wrapped hyperlinks in the Slack thread.
+before embedding. Build with `scripts/build_deck.py`, `scripts/build_brief.py`, and
+`scripts/build_onepager.py` — pass a content JSON (schemas are in each script header).
+Then upload all three into Drive at: <parent shared folder> / <Client Name> / "Onboarding
+Pack - <Day, Month D YYYY>". Files inherit the parent folder's team sharing; the Drive MCP
+cannot set per-file permissions, so rely on folder inheritance. Post wrapped hyperlinks
+(<url|label>) in the Slack thread.
